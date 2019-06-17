@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import noop from "lodash/noop";
+import React, { useContext, useEffect } from "react";
 import { hot } from "react-hot-loader";
-import { oneOfType, func, shape, number, bool, any } from "prop-types";
 import styled from "styled-components";
+import AuthContext from "../../layout/auth/AuthContext";
+import { asyncFetchUser } from "../../../modules/auth/auth";
 
 const Nav = styled.nav`
   width: 80%;
@@ -11,7 +11,6 @@ const Nav = styled.nav`
   display: flex;
   align-items: center;
   justify-content: center;
-
   background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
 `;
 
@@ -33,28 +32,15 @@ const Item = styled.li`
   list-style-type: none;
 `;
 
-class Header extends Component {
-  static propTypes = {
-    asyncFetchUser: func,
-    user: oneOfType([
-      bool,
-      any,
-      shape({
-        credits: number
-      })
-    ])
-  };
+function Header() {
+  const { user, dispatch } = useContext(AuthContext);
 
-  static defaultProps = {
-    asyncFetchUser: noop
-  };
+  useEffect(() => {
+    asyncFetchUser(dispatch);
+  });
 
-  componentDidMount() {
-    this.props.asyncFetchUser();
-  }
-
-  renderContent() {
-    switch (this.props.user) {
+  const renderContent = () => {
+    switch (user) {
       case null:
         return;
       case false:
@@ -64,24 +50,16 @@ class Header extends Component {
           </li>
         );
       default:
-        return [
-          this.props.user ? (
-            <Item key="1">GoogleId: {this.props.user.googleId}</Item>
-          ) : (
-            ""
-          )
-        ];
+        return [user ? <Item key="1">GoogleId: {user.googleId}</Item> : ""];
     }
-  }
+  };
 
-  render() {
-    return (
-      <Nav>
-        <Title>Redux-To-Hooks Example</Title>
-        <List>{this.renderContent()}</List>
-      </Nav>
-    );
-  }
+  return (
+    <Nav>
+      <Title>Redux-To-Hooks Example</Title>
+      <List>{renderContent()}</List>
+    </Nav>
+  );
 }
 
 export default hot(module)(Header);

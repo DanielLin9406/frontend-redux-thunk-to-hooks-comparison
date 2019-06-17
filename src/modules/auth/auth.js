@@ -18,7 +18,7 @@ export const initialState = {
 /*
  * auth reducer
  */
-export default (state = initialState, action) => {
+export default function authReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_USER:
       return Object.assign({}, state, {
@@ -27,7 +27,7 @@ export default (state = initialState, action) => {
     default:
       return state;
   }
-};
+}
 
 /*
  * export sync packaged dispatch
@@ -36,8 +36,8 @@ export default (state = initialState, action) => {
 /*
  * export async packaged dispatch
  */
-export const asyncFetchUser = () => async dispatch => {
-  const res = await axios.get("/user");
+export const asyncFetchUser = async dispatch => {
+  const res = await axios.get("http://localhost:8095/user");
   dispatch({
     type: FETCH_USER,
     payload: res.data
