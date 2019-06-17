@@ -14,12 +14,11 @@
     "styled-components": "^4.3.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start & npm run mock",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "mock": "json-server mock/mock.js --watch --port 8090",
-    "mockdev": "npm run mock & npm start"
+    "mock": "json-server mock/mock.json --watch --port 8095"
   },
   "eslintConfig": {
     "extends": "react-app"
